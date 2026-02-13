@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float _speed;
+    [SerializeField] private float _speed = 1f;
 
     private Transform _player;
     private bool _is;
@@ -30,8 +30,6 @@ public class Enemy : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Player"))
-        {
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
-        }
     }
 }
