@@ -2,31 +2,21 @@ using UnityEngine;
 
 public class AimShoot : MonoBehaviour
 {
-    [SerializeField] private GameObject _bullet;
-    [SerializeField] private float _fireRare = 2;
-    [SerializeField] private Transform _player;
-    [SerializeField] private float _timer;
+    [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private float _fireInterval = 1f;
+    [SerializeField] private Transform _shootPoint;
+    [SerializeField] private Transform _playerTarget;
 
-    private void Start()
-    {
-        _player = GameObject.FindGameObjectWithTag("Player").transform;
-    }
+    private float _lastShotTime;
 
     private void Update()
     {
-        _timer += Time.deltaTime;
-
-        if (_timer >= _fireRare)
+        if (Time.timeSinceLevelLoad - _lastShotTime >= _fireInterval)
         {
-            Shoot();
-            _timer = 0;
+            var bulletInstance = Instantiate(_bulletPrefab, _shootPoint.position, Quaternion.identity);
+            var direction = (_playerTarget.position - _shootPoint.position).normalized;
+            bulletInstance.GetComponent<Bullet>().SetDirection(direction);
+            _lastShotTime = Time.timeSinceLevelLoad;
         }
-    }
-
-    void Shoot()
-    {
-        Vector2 dir = (_player.position - transform.position).normalized;
-        GameObject bullet = Instantiate(_bullet, transform.position, Quaternion.identity);
-        bullet.GetComponent<Bullet>().Init(dir);
     }
 }

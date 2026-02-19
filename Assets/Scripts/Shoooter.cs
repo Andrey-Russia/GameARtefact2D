@@ -2,26 +2,20 @@ using UnityEngine;
 
 internal class EnemyShooter : MonoBehaviour
 {
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private float fireRate = 2f;
+    [SerializeField]private GameObject _bulletPrefab;
 
-    private float timer;
+    [SerializeField]private float _fireRate = 1f;
 
-    void Update()
+    [SerializeField]private Transform _shootPoint;
+
+    private float _nextFireTime;
+
+    private void Update()
     {
-        timer += Time.deltaTime;
-
-        if (timer >= fireRate)
+        if (Time.time >= _nextFireTime)
         {
-            Shoot();
-            timer = 0f;
+            Instantiate(_bulletPrefab, _shootPoint.position, Quaternion.identity);
+            _nextFireTime += _fireRate;
         }
-    }
-
-    void Shoot()
-    {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        bullet.GetComponent<Bullet>().Init(firePoint.right);
     }
 }
