@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(0);
         else if (other.TryGetComponent(out Box box))
             box.TakeDamage(1);
         else if (other.CompareTag("Enemy"))
