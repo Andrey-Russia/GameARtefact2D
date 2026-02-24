@@ -1,44 +1,46 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private Transform _playerTransform;
-    [SerializeField] private float _chaseRange = 5f;
-    [SerializeField] private float _moveSpeed = 3f;
+    [SerializeField] private float speed = 2f;
+    private Transform playerTransform;
+    private bool isChasingPlayer = false;
 
-    private bool _isChasing = false;
+    void Start()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+            playerTransform = player.transform;
+    }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void Update()
+    {
+        if (isChasingPlayer && playerTransform != null)
+            ChasePlayer();
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
-            _isChasing = true;
+        {
+            isChasingPlayer = true;
+            Debug.Log("Вошел в зону обнаружения игрока.");
+        }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    void ChasePlayer()
     {
-        if (other.CompareTag("Player"))
-            _isChasing = false;
+        transform.DOMove(playerTransform.position, Time.time + Vector2.Distance(transform.position, playerTransform.position) / speed, false).SetSpeedBased();
     }
 
-    private void Update()
-    {
-        if (_isChasing && _playerTransform != null)
-            MoveTowardPlayer();
-    }
-
-    private void MoveTowardPlayer()
-    {
-        transform.position = Vector2.MoveTowards(
-            transform.position,
-            _playerTransform.position,
-            _moveSpeed * Time.deltaTime
-        );
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        {
+            Debug.Log("Столкнулся с игроком!");
+            SceneManager.LoadScene(0);
+        }
     }
 }

@@ -29,7 +29,9 @@ public class Bullet : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         else if (other.TryGetComponent(out Box box))
             box.TakeDamage(1);
+        else if (other.CompareTag("Enemy"))
+            Destroy(other.gameObject);
 
-        Destroy(gameObject);
+            Destroy(gameObject);
     }
 }

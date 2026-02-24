@@ -13,9 +13,7 @@ internal class EnemyShooter : MonoBehaviour
     private void Update()
     {
         if (Time.time >= _nextFireTime)
-        {
             Instantiate(_bulletPrefab, _shootPoint.position, Quaternion.identity);
             _nextFireTime += _fireRate;
-        }
     }
 }
