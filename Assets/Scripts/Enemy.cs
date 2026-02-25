@@ -1,12 +1,15 @@
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float speed = 2f;
+    [SerializeField] private float startSpeed = 1f;
+    [SerializeField] private float targetSpeed = 3f;
+    [SerializeField] private float accelerationTime = 5f;
     private Transform playerTransform;
     private bool isChasingPlayer = false;
+    private Tweener movementTweener;
 
     void Start()
     {
@@ -18,29 +21,35 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         if (isChasingPlayer && playerTransform != null)
-            ChasePlayer();
+            FollowPlayer();
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
-        {
             isChasingPlayer = true;
-            Debug.Log("Вошел в зону обнаружения игрока.");
-        }
+            StartAccelerationSequence();
     }
 
-    void ChasePlayer()
+    void StartAccelerationSequence()
     {
-        transform.DOMove(playerTransform.position, Time.time + Vector2.Distance(transform.position, playerTransform.position) / speed, false).SetSpeedBased();
+        movementTweener?.Kill();
+        movementTweener = DOTween.To(
+            () => startSpeed,
+            x => startSpeed = x,
+            targetSpeed,
+            accelerationTime
+        ).SetRelative().SetEase(Ease.OutQuad);
+    }
+
+    void FollowPlayer()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, startSpeed * Time.deltaTime);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("Столкнулся с игроком!");
             SceneManager.LoadScene(0);
-        }
     }
 }

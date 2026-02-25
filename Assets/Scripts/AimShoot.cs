@@ -1,22 +1,31 @@
 using UnityEngine;
 
-public class AimShoot : MonoBehaviour
+public class AI : MonoBehaviour
 {
-    [SerializeField] private GameObject _bulletPrefab;
-    [SerializeField] private float _fireInterval = 1f;
-    [SerializeField] private Transform _shootPoint;
-    [SerializeField] private Transform _playerTarget;
+    [SerializeField] private GameObject playerTarget;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float detectionRadius = 10f;
+    [SerializeField] private Transform gunPosition;
 
-    private float _lastShotTime;
+    private float nextFireTime;
 
     private void Update()
     {
-        if (Time.timeSinceLevelLoad - _lastShotTime >= _fireInterval)
+        if (playerTarget != null && Vector2.Distance(transform.position, playerTarget.transform.position) <= detectionRadius)
         {
-            var bulletInstance = Instantiate(_bulletPrefab, _shootPoint.position, Quaternion.identity);
-            var direction = (_playerTarget.position - _shootPoint.position).normalized;
-            bulletInstance.GetComponent<Bullet>().SetDirection(direction);
-            _lastShotTime = Time.timeSinceLevelLoad;
+            ShootAtPlayer();
+        }
+    }
+
+    private void ShootAtPlayer()
+    {
+        if (Time.time > nextFireTime)
+        {
+            nextFireTime = Time.time + fireRate;
+            var bulletInstance = Instantiate(bulletPrefab, gunPosition.position, Quaternion.identity);
+            Vector2 directionToPlayer = (Vector2)(playerTarget.transform.position - transform.position).normalized;
+            bulletInstance.GetComponent<Bullet1>().SetDirection(directionToPlayer);
         }
     }
 }

@@ -96,9 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b466bcc4bd4f564459a47c2c3e907abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerTransform: {fileID: 0}
-  _chaseRange: 5
-  _moveSpeed: 3
+  speed: 2
 --- !u!50 &7507748405146436089
 Rigidbody2D:
   serializedVersion: 5
@@ -174,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 861e02b22314cfc488683ad7c0c876c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletPrefab: {fileID: 7339530229754655812, guid: 9530c368a1adfb446baefec690eca0d4, type: 3}
+  _bulletPrefab: {fileID: 7339530229754655812, guid: 4d0938ef264005e4ba4ba6ba96b81c58, type: 3}
   _fireInterval: 1
   _shootPoint: {fileID: 4581511372562280783}
   _playerTarget: {fileID: 0}
